@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranking de Snacks</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .hidden { display: none; }
+    .category { margin-bottom: 20px; }
+    .snack { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Ranking de Snacks</h1>
+  <div id="login">
+    <label>Introduce tu alias: <input type="text" id="alias" /></label>
+    <button onclick="start()">Entrar</button>
+  </div>
+  <div id="voting" class="hidden">
+    <h2>Hola, <span id="userAlias"></span> 👋</h2>
+    <form id="rankingForm">
+      <div class="category">
+        <h3>Mejor snack dulce</h3>
+        <div class="snack"><input type="radio" name="dulce" value="KitKat" /> KitKat</div>
+        <div class="snack"><input type="radio" name="dulce" value="Twix" /> Twix</div>
+        <div class="snack"><input type="radio" name="dulce" value="Kinder Bueno" /> Kinder Bueno</div>
+        <div class="snack"><input type="radio" name="dulce" value="Huesitos" /> Huesitos</div>
+        <div class="snack"><input type="radio" name="dulce" value="Snickers" /> Snickers</div>
+        <div class="snack"><input type="radio" name="dulce" value="Phoskitos" /> Phoskitos</div>
+      </div>
+      <div class="category">
+        <h3>Mejor snack salado</h3>
+        <div class="snack"><input type="radio" name="salado" value="Pelotazos" /> Pelotazos</div>
+        <div class="snack"><input type="radio" name="salado" value="Gusanitos" /> Gusanitos</div>
+        <div class="snack"><input type="radio" name="salado" value="Doritos" /> Doritos</div>
+        <div class="snack"><input type="radio" name="salado" value="Ruffles de Jamón" /> Ruffles de Jamón</div>
+        <div class="snack"><input type="radio" name="salado" value="Conos" /> Conos</div>
+        <div class="snack"><input type="radio" name="salado" value="Jumpers" /> Jumpers</div>
+      </div>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+  <div id="result" class="hidden"></div>
+
+  <script>
+    function start() {
+      const alias = document.getElementById("alias").value.trim();
+      if (!alias) return alert("Por favor, escribe tu alias.");
+      document.getElementById("userAlias").textContent = alias;
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("voting").classList.remove("hidden");
+    }
+
+    document.getElementById("rankingForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const dulce = document.querySelector("input[name='dulce']:checked");
+      const salado = document.querySelector("input[name='salado']:checked");
+      const alias = document.getElementById("alias").value.trim();
+
+      if (!dulce || !salado) return alert("Debes votar en ambas categorías.");
+      const voto = { alias, dulce: dulce.value, salado: salado.value };
+
+      let votos = JSON.parse(localStorage.getItem("votos") || "[]");
+      votos.push(voto);
+      localStorage.setItem("votos", JSON.stringify(votos));
+
+      document.getElementById("voting").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("result").innerHTML = "<h3>¡Gracias por votar!</h3>";
+    });
+  </script>
+</body>
+</html>
